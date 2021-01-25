@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.clls.dao.InformationDao">
+    <resultMap id="userInformationMap" type="com.clls.domain.Information">
+        <id property="id" column="id"></id>
+        <result property="userId" column="userId"></result>
+        <result property="content" column="content"></result>
+        <result property="date" column="date"></result>
+        <result property="bounty" column="bounty"></result>
+        <result property="state" column="state"></result>
+        <association property="user" column="userId" javaType="com.clls.domain.User">
+            <id property="id" column="userId"></id>
+            <result property="username" column="username"></result>
+        </association>
+        <!--<association property="servant" column=""-->
+    </resultMap>
+
+    <!--查询所有推文-->
+    <select id="findAll" resultType="com.clls.domain.Information">
+        select * from information;
+--         select inf.* , u.username from information inf,user u where u.id = inf.userId;
+    </select>
+
+    <!--保存推文-->
+    <insert id="saveInformation" parameterType="com.clls.domain.Information">
+        insert into information(userId,content,date,bounty)values(#{userId},#{content},#{date},#{bounty});
+    </insert>
+
+    <!--返回特定推文信息-->
+    <select id="findOne" resultType="com.clls.domain.Information" parameterType="com.clls.domain.User">
+        select * from information where userId=#{id};
+    </select>
+
+    <!--返回记录的条数-->
+    <select id="findTotalCount" resultType="int">
+        select COUNT(*) from information;
+    </select>
+
+    <!--返回页面需要的记录-->
+    <select id="findByPage" resultMap="userInformationMap">
+        select inf.*,u.username from information inf,user u where inf.userId = u.id order by inf.id desc limit #{start} , #{rows};
+    </select>
+
+    <!--返回页面需要的记录-->
+    <select id="findInfoOfUserByPage" resultMap="userInformationMap">
+        select inf.*,u.username from information inf,user u where inf.userId = #{userId} and u.id=inf.userId order by inf.id desc limit #{start}, #{rows};
+    </select>
+
+    <!--删除一条记录-->
+    <delete id="deleteOneInformation">
+        delete from information where id = #{id};
+    </delete>
+
+    <!--根据记录查询用户id-->
+    <select id="findUserIdById" resultType="int">
+        select userId from information where id = #{id};
+    </select>
+
+    <!--修改一条记录的当前状态-->
+    <update id="modifyState">
+        update information set state = #{state} where id = #{id};
+    </update>
+
+    <!--返回当前记录的状态-->
+    <select id="findState" parameterType="int" resultType="int">
+        select state from information where id = #{id};
+    </select>
+
+    <!--根据用户发布的悬赏的ID查询接单人ID-->
+    <select id="findServantId" resultType="int">
+        select userId from orderTaken where infoId = #{infoId};
+    </select>
+
+    <!--查询某一用户发布的总信息数量-->
+    <select id="findTotalCountOfUser" resultType="int">
+        select count(*) from information where userId=#{userId};
+    </select>
+
+    <!--根据接单人id返回所有他接的单-->
+    <select id="findAllTakenOrderByPage" resultType="com.clls.domain.Information">
+        select inf.* from information inf where inf.id in
+        (select infoId from orderTaken where userId=#{userId}) order by inf.id desc limit #{start} , #{rows};
+    </select>
+
+    <!--根据接单人id返回所有他接的单的数量-->
+    <select id="findTotalCountOfTakenOrder" resultType="int">
+        select count(*) from information inf where inf.id in
+        (select infoId from orderTaken where userId=#{userId})
+    </select>
+
+    <!--根据订单号删除接单表中的一行，联立下面的cancelAnOrder使用-->
+    <delete id="deleteTakenOrderByInfoId">
+        delete from orderTaken where infoId=#{infoId};
+    </delete>
+    <!--根据订单号取消接单-->
+    <update id="cancelAnOrderByInfoId">
+        update information set state=1 where id=#{infoId} and state=2;
+    </update>
+
+    <!--完成订单-->
+    <update id="completeOrderByInfoId">
+        update information set state=0 where id=#{infoId} and state=2;
+    </update>
+</mapper>

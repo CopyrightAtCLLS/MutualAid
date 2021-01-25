@@ -1,0 +1,1037 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>space</title>
+
+    <!--禁用缓存-->
+    <META HTTP-EQUIV="pragma" CONTENT="no-cache">
+    <META HTTP-EQUIV="Cache-Control" CONTENT="no-store, must-revalidate">
+    <META HTTP-EQUIV="expires" CONTENT="Wed, 26 Feb 1997 08:21:57 GMT">
+    <META HTTP-EQUIV="expires" CONTENT="0">
+
+    <!--bootstrap-->
+    <link href="../css/bootstrap.min.css" rel="stylesheet">
+
+    <script src="../js/jquery-3.5.1.js"></script>
+    <script src="../js/jquery.cookie.js"></script>
+    <script src="../js/bootstrap.min.js"></script>
+    <style type="text/css">
+        body {
+            padding-top: 40px;
+        }
+    </style>
+    <!--页面加载函数定义-->
+    <script>
+        var currentPage = 1;
+        var currentPage_1 = 1;
+        var init = 0;
+        //存放服务器返回的PageBean对象
+        var data;
+        var data_1;
+        //存放PageBean返回的推文list
+        var postData;
+        var postData_1;
+        //分页数量
+        var totalPaging = 5;
+
+        //user用户存放从服务器session中获取的User对象，表示当前用户
+        var user;
+
+
+        function getOwner() {
+            $.ajax({
+                url: "findOwner",
+                type: "POST",
+                contentType: "application/json;charset=UTF-8",
+                dataType: "json",
+                success: function (homeOwner) {
+                    $("#username")[0].innerText = homeOwner.username + ":";
+                }
+            })
+        }
+
+        //从服务器异步获取页面框架布局，以及渲染信息
+        function getPageBean() {
+            $.ajax({
+                url: "../space/userhomeBean",//请求路径
+                type: "POST",
+                contentType: "application/json;charset=UTF-8",
+                // data: '{"_currentPage":' + currentPage + '}',
+                data: "{_currentPage:'" + currentPage + "',identifier:'0'}",
+                dataType: "json",
+                success: function (result) {
+                    console.log(result);
+                    data = result;
+                    postData = result.list;
+                    //页面布局初始化
+                    // if (init === 0) {
+                    //     init = 1;
+                    //     initPagination(data.totalPage);
+                    //     initRows();
+                    // }
+                    //根据pagebean设置推文的封装，以及删除键的显示
+                    // encapsulation();
+                    // setDeleteButton();
+                    // setCancelButton();
+
+                    //为删除键绑定ajax
+                    for (var i = 0; i < postData.length; i++) {
+                        $($(".delButton")[i]).off().click(function () {
+                            DeleteButtonOnclick($(this).attr("info-id"));
+                        })
+                    }
+                    // //为接单键绑定ajax
+                    for (var i = 0; i < postData.length; i++) {
+                        $($(".bounty")[i]).off().click(function () {
+                            receiveOrder($(this).attr("info-id"));
+                        })
+                    }
+                    getPageBeanOfSubpageTwo();
+                    // setPagination();
+                    // jumpToLogin();
+                },
+                complete: function () {
+                    // receiveOrder();
+                }
+            })
+        }
+
+        function getPageBeanOfSubpageTwo() {
+            $.ajax({
+                url: "../space/userhomeBean",//请求路径
+                type: "POST",
+                contentType: "application/json;charset=UTF-8",
+                // data: '{"_currentPage":' + currentPage + '}',
+                data: "{_currentPage:'" + currentPage_1 + "',identifier:'1'}",
+                dataType: "json",
+                success: function (result) {
+                    console.log(result);
+                    data_1 = result;
+                    postData_1 = result.list;
+                    //页面布局初始化
+                    if (init === 0) {
+                        init = 1;
+                        initPagination(data.totalPage);
+                        initPagination_1(data_1.totalPage);
+                        initRows();
+                    }
+                    //根据pagebean设置推文的封装，以及删除键的显示
+                    // encapsulation();
+                    setDeleteButton();
+                    setCancelButton();
+                    setPagination();
+                    setPagination_1();
+                    jumpToLogin();
+                },
+                complete: function () {
+                    //为删除键绑定ajax
+                    for (var i = 0; i < postData.length; i++) {
+                        $($(".delButton")[i]).off().click(function () {
+                            DeleteButtonOnclick($(this).attr("info-id"));
+                        })
+                    }
+                    //为接单键绑定ajax
+                    for (var i = 0; i < postData.length; i++) {
+                        $($(".publisher")[i]).off().click(function () {
+                            // receiveOrder($(this).attr("info-id"));
+                        })
+                    }
+                    //为取消接单键绑定ajax
+                    for (var i = 0; i < postData_1.length; i++) {
+                        $($(".cancelButton")[i]).off().click(function () {
+                            CancelButtonOnclick($(this).attr("info-id"));
+                        })
+                    }
+                    //为完成订单键绑定ajax
+                    for (var i = 0; i < postData.length; i++) {
+                        $($(".completeButton")[i]).off().click(function () {
+                            completeButtonOnclick($(this).attr("info-id"));
+                        })
+                    }
+                    // console.log("complete");
+                    encapsulation();
+                    receiveOrder();
+                }
+            })
+        }
+        //初始化分页按钮
+        function initPagination(totalPage) {
+            if (totalPage > totalPaging) {
+                $('#pagination').append("<li id=\"previous\" style=\"visibility: hidden;\"><a href=\"javascript:void(0);\" aria-label=\"Previous\"><span aria-hidden=\"true\">&laquo 上一页</span></a></li>")
+                for (var i = 0; i < totalPaging; i++) {
+                    if (i === 0) {
+                        $($('#pagination').children("li")[i]).after("<li class='active'><a href=\"javascript:void(0);\">"
+                            + (i + 1) + "<span class=\"sr-only\"></span></a></li>");
+                    } else {
+                        $($('#pagination').children("li")[i]).after("<li ><a href=\"javascript:void(0);\">"
+                            + (i + 1) + "<span class=\"sr-only\"></span></a></li>");
+                    }
+                }
+                $($('#pagination').children("li")[totalPaging]).after("<li id=\"next\" style=\"visibility: ;\"><a href=\"javascript:void(0);\" aria-label=\"Previous\"><span aria-hidden=\"true\">下一页 &raquo</span></a></li>")
+            } else if (totalPage > 1) {
+                $('#pagination').append("<li id=\"previous\" style=\"visibility: hidden;\"><a href=\"javascript:void(0);\" aria-label=\"Previous\"><span aria-hidden=\"true\">&laquo 上一页</span></a></li>")
+                for (var i = 0; i < totalPage; i++) {
+                    if (i === 0) {
+                        $($('#pagination').children("li")[i]).after("<li class='active'><a href=\"javascript:void(0);\">"
+                            + (i + 1) + "<span class=\"sr-only\"></span></a></li>");
+                    } else {
+                        $($('#pagination').children("li")[i]).after("<li ><a href=\"javascript:void(0);\">"
+                            + (i + 1) + "<span class=\"sr-only\"></span></a></li>");
+                    }
+                }
+                $($('#pagination').children("li")[totalPage]).after("<li id=\"next\" style=\"visibility: ;\"><a href=\"javascript:void(0);\" aria-label=\"Previous\"><span aria-hidden=\"true\">下一页 &raquo</span></a></li>")
+            }
+        }
+
+        function initPagination_1(totalPage) {
+            if (totalPage > totalPaging) {
+                $('#pagination_1').append("<li id=\"previous_1 \" style=\"visibility: hidden;\"><a href=\"javascript:void(0);\" aria-label=\"Previous\"><span aria-hidden=\"true\">&laquo 上一页</span></a></li>")
+                for (var i = 0; i < totalPaging; i++) {
+                    if (i === 0) {
+                        $($('#pagination_1').children("li")[i]).after("<li class='active'><a href=\"javascript:void(0);\">"
+                            + (i + 1) + "<span class=\"sr-only\"></span></a></li>");
+                    } else {
+                        $($('#pagination_1').children("li")[i]).after("<li ><a href=\"javascript:void(0);\">"
+                            + (i + 1) + "<span class=\"sr-only\"></span></a></li>");
+                    }
+                }
+                $($('#pagination_1').children("li")[totalPaging]).after("<li id=\"next_1\" style=\"visibility: ;\"><a href=\"javascript:void(0);\" aria-label=\"Previous\"><span aria-hidden=\"true\">下一页 &raquo</span></a></li>")
+            } else if (totalPage > 1) {
+                $('#pagination_1').append("<li id=\"previous_1\" style=\"visibility: hidden;\"><a href=\"javascript:void(0);\" aria-label=\"Previous\"><span aria-hidden=\"true\">&laquo 上一页</span></a></li>")
+                for (var i = 0; i < totalPage; i++) {
+                    if (i === 0) {
+                        $($('#pagination_1').children("li")[i]).after("<li class='active'><a href=\"javascript:void(0);\">"
+                            + (i + 1) + "<span class=\"sr-only\"></span></a></li>");
+                    } else {
+                        $($('#pagination_1').children("li")[i]).after("<li ><a href=\"javascript:void(0);\">"
+                            + (i + 1) + "<span class=\"sr-only\"></span></a></li>");
+                    }
+                }
+                $($('#pagination_1').children("li")[totalPage]).after("<li id=\"next_1\" style=\"visibility: ;\"><a href=\"javascript:void(0);\" aria-label=\"Previous\"><span aria-hidden=\"true\">下一页 &raquo</span></a></li>")
+            }
+        }
+
+        //根据currentPage设置分页按钮的激活特效，和页码显示
+        function setPagination() {
+            //当总页数大于分页数
+            if (data.totalPage > totalPaging) {
+                if (currentPage >= (totalPaging + 1) / 2 && currentPage < data.totalPage - (totalPaging - 3) / 2) {
+                    // console.log("中间")
+                    for (var i = 1; i < totalPaging + 1; i++) {
+                        $($("#pagination").children("li")[i]).children('a')[0].innerText
+                            = currentPage - ((totalPaging + 1) / 2 - i);
+                    }
+                    $("#pagination").children().removeClass("active");
+                    $($("#pagination").children("li")[(totalPaging + 1) / 2]).addClass('active');
+                } else if (currentPage >= data.totalPage - (totalPaging - 3) / 2) {
+                    // console.log("右边")
+                    if (currentPage > data.totalPage) {
+                        currentPage = data.totalPage;
+                        getPageBean();
+                    }
+                    for (var i = 1; i < totalPaging + 1; i++) {
+                        $($("#pagination").children("li")[totalPaging + 1 - i]).children('a')[0].innerText
+                            = data.totalPage - i + 1;
+                    }
+                    $("#pagination").children().removeClass("active");
+                    $($("#pagination").children("li")[$("#pagination").children().length - 2 - (data.totalPage - currentPage)]).addClass('active');
+                } else {
+                    for (var i = 1; i < totalPaging + 1; i++) {
+                        // console.log("左边")
+                        $($("#pagination").children("li")[i]).children('a')[0].innerText
+                            = i;
+                    }
+                }
+            }
+            //当总页数小于等于分页数
+            else {
+                if (data.totalPage === totalPaging) {
+                    if (currentPage === data.totalPage + 1) {
+                        currentPage -= 1;
+                        getPageBean();
+                    }
+                    for (var i = 1; i <= data.totalPage; i++) {
+                        $($("#pagination").children("li")[i]).children('a')[0].innerText
+                            = i;
+                    }
+                }
+                if (data.totalPage < totalPaging) {
+                    if (currentPage === data.totalPage + 1) {
+                        currentPage -= 1;
+                        getPageBean();
+                    }
+                    $("#pagination").empty();
+                    $('#pagination').append("<li id=\"previous\" style=\"visibility: ;\"><a href=\"javascript:void(0);\" aria-label=\"Previous\"><span aria-hidden=\"true\">&laquo 上一页</span></a></li>")
+                    for (var i = 0; i < data.totalPage; i++) {
+                        $($('#pagination').children("li")[i]).after("<li ><a href=\"javascript:void(0);\">"
+                            + (i + 1) + "<span class=\"sr-only\"></span></a></li>");
+                    }
+                    $($('#pagination').children("li")[data.totalPage]).after("<li id=\"next\" style=\"visibility: ;\"><a href=\"javascript:void(0);\" aria-label=\"Previous\"><span aria-hidden=\"true\">下一页 &raquo</span></a></li>")
+                    if (currentPage === 1)
+                        $("#previous").css("visibility", "hidden");
+                    if (currentPage === 0) {
+                        $("#previous").css("visibility", "hidden");
+                    }
+                }
+                if (currentPage !== 0) {
+                    $("#pagination").children().removeClass("active");
+                    $($("#pagination").children("li")[currentPage]).addClass('active');
+                }
+            }
+            if (currentPage === data.totalPage) {
+                $("#next").css("visibility", "hidden");
+            } else {
+                $("#next").css("visibility", "");
+            }
+        }
+
+        function setPagination_1() {
+            //当总页数大于分页数
+            if (data_1.totalPage > totalPaging) {
+                if (currentPage_1 >= (totalPaging + 1) / 2 && currentPage_1 < data_1.totalPage - (totalPaging - 3) / 2) {
+                    // console.log("中间")
+                    for (var i = 1; i < totalPaging + 1; i++) {
+                        $($("#pagination_1").children("li")[i]).children('a')[0].innerText
+                            = currentPage_1 - ((totalPaging + 1) / 2 - i);
+                    }
+                    $("#pagination_1").children().removeClass("active");
+                    $($("#pagination_1").children("li")[(totalPaging + 1) / 2]).addClass('active');
+                } else if (currentPage_1 >= data_1.totalPage - (totalPaging - 3) / 2) {
+                    // console.log("右边")
+                    if (currentPage_1 > data_1.totalPage) {
+                        currentPage_1 = data_1.totalPage;
+                        getPageBean();
+                    }
+                    for (var i = 1; i < totalPaging + 1; i++) {
+                        $($("#pagination_1").children("li")[totalPaging + 1 - i]).children('a')[0].innerText
+                            = data_1.totalPage - i + 1;
+                    }
+                    $("#pagination_1").children().removeClass("active");
+                    $($("#pagination_1").children("li")[$("#pagination_1").children().length - 2 - (data_1.totalPage - currentPage_1)]).addClass('active');
+                } else {
+                    for (var i = 1; i < totalPaging + 1; i++) {
+                        // console.log("左边")
+                        $($("#pagination_1").children("li")[i]).children('a')[0].innerText
+                            = i;
+                    }
+                }
+            }
+            //当总页数小于等于分页数
+            else {
+                if (data_1.totalPage === totalPaging) {
+                    if (currentPage_1 === data_1.totalPage + 1) {
+                        currentPage_1 -= 1;
+                        getPageBean();
+                    }
+                    for (var i = 1; i <= data_1.totalPage; i++) {
+                        $($("#pagination_1").children("li")[i]).children('a')[0].innerText
+                            = i;
+                    }
+                }
+                if (data_1.totalPage < totalPaging) {
+                    if (currentPage_1 === data_1.totalPage + 1) {
+                        currentPage_1 -= 1;
+                        getPageBean();
+                    }
+                    $("#pagination_1").empty();
+                    $('#pagination_1').append("<li id=\"previous_1\" style=\"visibility: ;\"><a href=\"javascript:void(0);\" aria-label=\"Previous\"><span aria-hidden=\"true\">&laquo 上一页</span></a></li>")
+                    for (var i = 0; i < data_1.totalPage; i++) {
+                        $($('#pagination_1').children("li")[i]).after("<li ><a href=\"javascript:void(0);\">"
+                            + (i + 1) + "<span class=\"sr-only\"></span></a></li>");
+                    }
+                    $($('#pagination_1').children("li")[data_1.totalPage]).after("<li id=\"next_1\" style=\"visibility: ;\"><a href=\"javascript:void(0);\" aria-label=\"Previous\"><span aria-hidden=\"true\">下一页 &raquo</span></a></li>")
+                    if (currentPage_1 === 1)
+                        $("#previous_1").css("visibility", "hidden");
+                    if (currentPage_1 === 0) {
+                        $("#previous_1").css("visibility", "hidden");
+                    }
+                }
+                if (currentPage_1 !== 0) {
+                    $("#pagination_1").children().removeClass("active");
+                    $($("#pagination_1").children("li")[currentPage_1]).addClass('active');
+                }
+            }
+            if (currentPage_1 === data_1.totalPage) {
+                $("#next_1").css("visibility", "hidden");
+            } else {
+                $("#next_1").css("visibility", "");
+            }
+        }
+
+        //设置currentPage,以及前进后退的隐藏和显示
+        function liOnclick() {
+            $("#pagination").on("click", "li", function () {
+                var index = $(this).index();
+                //设置当前页码
+                //向前按钮
+                if (index === 0) {
+                    currentPage -= 1;
+                }
+                //普通按钮
+                else if (index !== $("#pagination").children().length - 1) {
+                    if (currentPage < (totalPaging + 1) / 2) {
+                        currentPage = index;
+                    } else if (currentPage >= (totalPaging + 1) / 2 && currentPage < data.totalPage - (totalPaging - 3) / 2) {
+                        currentPage += (index - (totalPaging + 1) / 2);
+                    } else {
+                        currentPage = data.totalPage - ($("#pagination").children().length - 2 - index);
+                    }
+                }
+                //向后按钮
+                else {
+                    currentPage += 1;
+                }
+                //设置前进后退的隐藏和显示
+                if (currentPage > 1) {
+                    $("#previous").css("visibility", "");
+                } else {
+                    $("#previous").css("visibility", "hidden");
+                }
+                if (currentPage < data.totalPage) {
+                    $("#next").css("visibility", "");
+                } else {
+                    $("#next").css("visibility", "hidden");
+                }
+                if (currentPage < $("#pagination").children().length - 1) {
+                    $("#pagination").children().removeClass("active");
+                    $($("#pagination").children("li")[currentPage]).addClass('active');
+                }
+                getPageBean();
+            })
+        }
+
+        function liOnclick_1() {
+            $("#pagination_1").on("click", "li", function () {
+                var index = $(this).index();
+                //设置当前页码
+                //向前按钮
+                if (index === 0) {
+                    currentPage_1 -= 1;
+                }
+                //普通按钮
+                else if (index !== $("#pagination_1").children().length - 1) {
+                    if (currentPage_1 < (totalPaging + 1) / 2) {
+                        currentPage_1 = index;
+                    } else if (currentPage_1 >= (totalPaging + 1) / 2 && currentPage_1 < data_1.totalPage - (totalPaging - 3) / 2) {
+                        currentPage_1 += (index - (totalPaging + 1) / 2);
+                    } else {
+                        currentPage_1 = data_1.totalPage - ($("#pagination_1").children().length - 2 - index);
+                    }
+                }
+                //向后按钮
+                else {
+                    currentPage_1 += 1;
+                }
+                //设置前进后退的隐藏和显示
+                console.log(currentPage_1)
+                if (currentPage_1 > 1) {
+                    $("#previous_1").css("visibility", "");
+                } else {
+                    $("#previous_1").css("visibility", "hidden");
+                }
+                if (currentPage_1 < data_1.totalPage) {
+                    $("#next_1").css("visibility", "");
+                } else {
+                    $("#next_1").css("visibility", "hidden");
+                }
+                if (currentPage_1 < $("#pagination_1").children().length - 1) {
+                    $("#pagination_1").children().removeClass("active");
+                    $($("#pagination_1").children("li")[currentPage_1]).addClass('active');
+                }
+                getPageBean();
+            })
+        }
+
+        function initRows() {
+            for (var i = 0; i < postData.length; i++)
+                $("#postList1").append("<li class=\"list-group-item postRow_0\">\n" +
+                    "            <div class=\"media\">\n" +
+                    "                <div class=\"media-body\">\n" +
+                    "                    <div class=\"text-muted date pull-left\">date</div>\n" +
+                    "                    <br>\n" +
+                    "                    <p class=\"postContent\">悬赏内容</p>\n" +
+                    "                </div>\n" +
+                    "                <div class=\"pull-left\">\n" +
+                    "                    <button class=\"btn btn-default delButton\" type=\"submit\">删除</button>\n" +
+                    "<button class=\"btn btn-default completeButton\" type=\"submit\">完成订单</button>\n" +
+                    "                </div>\n" +
+                    "                <div class=\"pull-right\">\n" +
+                    "                    <button class=\"btn btn-primary bounty\" type=\"submit\">赏金:4元</button>\n" +
+                    // "                    <p style=\"display: none;\" class=\"orderTaker\">接单人:<a>orderTaker</a></p>\n" +
+                    "                </div>\n" +
+                    "            </div>\n" +
+                    "        </li>")
+            for (var i = 0; i < postData_1.length; i++)
+                $("#postList2").append("<li class=\"list-group-item postRow_1\">\n" +
+                    "            <div class=\"media\">\n" +
+                    "                <div class=\"media-body\">\n" +
+                    "                    <div class=\"text-muted date_1 pull-left\">date</div>\n" +
+                    "                    <br>\n" +
+                    "                    <p class=\"postContent_1\">接单内容</p>\n" +
+                    "                </div>\n" +
+                    "                <div class=\"pull-left\">\n" +
+                    "                    <button class=\"btn btn-default cancelButton\" type=\"submit\">取消接单</button>\n" +
+                    // "<button class=\"btn btn-default completeButton\" type=\"submit\">完成订单</button>\n" +
+                    "                </div>\n" +
+                    "                <div class=\"pull-right\">\n" +
+                    "                    <button class=\"btn btn-default publisher\" type=\"submit\">发布者:</button>\n" +
+                    "                </div>\n" +
+                    "            </div>\n" +
+                    "        </li>")
+        }
+
+        // 根据当前用户设置前端按钮的显示。该方法必须在PageBean正确返回后再执行
+        function setDeleteButton() {
+            //设置接单和删除按钮的显示隐藏，以及info ID
+            for (var i = 0; i < postData.length; i++) {
+                $($(".delButton")[i]).css("display", "none");
+                $($(".delButton")[i]).attr("info-id", postData[i].id);
+
+                $($(".bounty")[i]).attr("info-id", postData[i].id);
+                if (user.id === postData[i].userId) {
+                    $($(".delButton")[i]).css("display", "");
+                }
+            }
+        }
+
+        //根据当前用户设置前端按钮的显示。该方法必须在PageBean正确返回后再执行
+        function setCancelButton() {
+            if (postData !== null) {
+                //设置接单和删除按钮的显示隐藏，以及info ID
+                for (var i = 0; i < postData_1.length; i++) {
+                    //设置取消键
+                    $($(".cancelButton")[i]).css("display", "none");
+                    $($(".cancelButton")[i]).attr("info-id", postData_1[i].id);
+                    //设置完成键
+                    $($(".completeButton")[i]).css("display", "none");
+                    $($(".completeButton")[i]).attr("info-id", postData_1[i].id);
+                    $($(".publisher")[i]).attr("info-id", postData_1[i].id);
+                    if(postData_1[i].servant!==null) {
+                        if (user.id === postData_1[i].servant.id && postData_1[i].state === 2) {
+                            $($(".cancelButton")[i]).css("display", "");
+                            $($(".completeButton")[i]).css("display", "");
+                        }
+                    }
+                }
+            }
+        }
+
+        function DeleteButtonOnclick(info_id) {
+            if (confirm("您确定要删除？") == true) {
+                $.ajax({
+                    url: "../information/deleteOrder",//请求路径
+                    type: "POST",
+                    contentType: "application/json;charset=UTF-8",
+                    data: '{"infoId":' + info_id + '}',
+                    dataType: "json",
+                    success: function (result) {
+                        getPageBean();
+                    }
+                })
+            }
+        }
+
+        function CancelButtonOnclick(info_id) {
+            if (confirm("您确定要取消该订单？") == true) {
+                $.ajax({
+                    url: "../information/cancelOrder",//请求路径
+                    type: "POST",
+                    contentType: "application/json;charset=UTF-8",
+                    data: '{"infoId":' + info_id + '}',
+                    dataType: "json",
+                    success: function (result) {
+                        console.log(result);
+                        if (result === true) {
+                            getPageBean();
+                        } else {
+                            alert("取消失败");
+                        }
+                    },
+                    complete: function () {
+                        encapsulation();
+                    }
+                })
+            }
+        }
+
+        function completeButtonOnclick(info_id) {
+            if (confirm("您确定要完成该订单？") == true) {
+                $.ajax({
+                    url: "../information/completeOrder",//请求路径
+                    type: "POST",
+                    contentType: "application/json;charset=UTF-8",
+                    data: '{"infoId":' + info_id + '}',
+                    dataType: "json",
+                    success: function (result) {
+                        console.log(result);
+                        if (result === true) {
+                            getPageBean();
+                        } else {
+                            alert("完成订单失败");
+                        }
+                    },
+                    complete: function () {
+                        encapsulation();
+                    }
+                })
+            }
+        }
+
+        function encapsulation() {
+            //第一个子页面
+            //页面数据初始化
+            if (typeof (postData) !== "undefined") {
+                $(".postRow_0").css("display", "none");
+                for (var i = 0; i < postData.length; i++) {
+                    //指向日期
+                    $(".date")[i].innerText = "date";
+                    //指向内容
+                    $(".postContent")[i].innerText = "content";
+                    //指向赏金
+                    $(".bounty")[i].innerText = "赏金";
+                }
+                //封装数据
+                for (var i = 0; i < postData.length; i++) {
+                    $($(".postRow_0")[i]).css("display", "");
+                    var content = postData[i].content;
+                    var date = postData[i].date;
+                    var bounty = postData[i].bounty;
+                    //封装单个帖子的数据
+                    //指向日期
+                    $(".date")[i].innerText = date;
+                    //指向内容
+                    $(".postContent")[i].innerText = content;
+                    //指向赏金
+                    $(".bounty")[i].innerText = "赏金:" + bounty + "元";
+                    //设置接单按钮状态
+                    $($(".bounty")[i]).css("display", "");
+                    //设置完成订单按钮状态
+                    $($(".completeButton")[i]).css("display", "none");
+
+                    //设置接单按钮的接单人id
+                    if (postData[i].servant !== null) {
+                        $($(".bounty")[i]).attr("user-info", postData[i].servant.id);
+                        $($(".bounty")[i]).unbind();
+                        // alert(i)
+                        $($(".bounty")[i]).click(function () {
+                            servantId = $($(this)[0]).attr("user-info");
+                            window.location.href = servantId;
+                        })
+                    } else if (postData[i].state === 0) {
+                        $($(".bounty")[i]).unbind();
+                    } else {
+                        $($(".bounty")[i]).removeAttr("user-info");
+                        $($(".bounty")[i]).unbind();
+                        $($(".bounty")[i]).off().click(function () {
+                            receiveOrder($(this).attr("info-id"));
+                        })
+                    }
+                    //设置删除按钮
+                    //设置完成订单的按钮
+                    if (postData[i].userId === user.id) {
+                        $($(".completeButton")[i]).css("display", "");
+                        $($(".completeButton")[i]).attr("info-id", postData[i].id);
+                        // $($(".completeButton")[i]).unbind();
+                        // // alert(i)
+                        // $($(".completeButton")[i]).click(function () {
+                        //     alert($(this).attr("info-id"))
+                        // })
+                    }
+                    // $($(".orderTaker")[i]).css("display", "none");
+                    //待领取状态
+                    if (postData[i].state === 1) {
+                        $($(".bounty")[i]).removeClass("btn-default");
+                        $($(".bounty")[i]).removeClass("btn-info");
+                        $($(".bounty")[i]).removeClass("btn-warning");
+                        $($(".bounty")[i]).removeClass("btn-success");
+                        $($(".bounty")[i]).addClass("btn-primary");
+                    }
+                    //进行中状态
+                    else if (postData[i].state === 2) {
+                        $($(".bounty")[i]).removeClass("btn-warning");
+                        $($(".bounty")[i]).removeClass("btn-success");
+                        $($(".bounty")[i]).removeClass("btn-primary");
+                        $($(".bounty")[i]).addClass("btn-default");
+                        $(".bounty")[i].innerText = "接单人:" + postData[i].servant.username;
+                        // $($(".bounty")[i]).css("display", "none");
+                        // $($(".orderTaker")[i]).css("display", "");
+                        // $($(".orderTaker")[i]).children("a")[0].innerText="接单人";
+                    }
+                    //完成状态
+                    else {
+                        $($(".bounty")[i]).removeClass("btn-default");
+                        $($(".bounty")[i]).removeClass("btn-warning");
+                        $($(".bounty")[i]).removeClass("btn-info");
+                        $($(".bounty")[i]).removeClass("btn-primary");
+                        $($(".bounty")[i]).addClass("btn-success");
+                        $(".bounty")[i].innerText = "已完成";
+                    }
+                }
+            }
+            //第二个子页面
+            //页面数据初始化
+            if (typeof (postData_1) !== "undefined") {
+                $(".postRow_1").css("display", "none");
+                for (var i = 0; i < postData_1.length; i++) {
+                    //指向日期
+                    $(".date_1")[i].innerText = "date";
+                    //指向内容
+                    $(".postContent_1")[i].innerText = "content";
+                    //指向赏金
+                    $(".publisher")[i].innerText = "赏金";
+                }
+                //封装数据
+                for (var i = 0; i < postData_1.length; i++) {
+                    $($(".postRow_1")[i]).css("display", "")
+                    var content = postData_1[i].content;
+                    var date = postData_1[i].date;
+                    // var bounty = postData[i].bounty;
+                    //封装单个帖子的数据
+                    //指向日期
+                    $(".date_1")[i].innerText = date;
+                    //指向内容
+                    $(".postContent_1")[i].innerText = content;
+                    //指向发布者按钮
+                    $(".publisher")[i].innerText = "发布者:" + postData_1[i].user.username;
+                    //设置发布者按钮状态
+                    $($(".publisher")[i]).css("display", "");
+
+
+                    //设置发布者按钮的发布者id
+                    $($(".publisher")[i]).attr("user-id", postData_1[i].userId);
+                    // console.log(postData_1[i].userId)
+                    $($(".publisher")[i]).unbind();
+                    $($(".publisher")[i]).click(function () {
+                        // servantId = $($(this)[0]).attr("user-info");
+                        // window.location.href = servantId;
+                        publisherId = $($(this)[0]).attr("user-id");
+                        window.location.href = publisherId;
+                    })
+
+                    //进行中状态
+                    // if (postData_1[i].state === 2) {
+                    //     $($(".publisher")[i]).removeClass("btn-info");
+                    //     $($(".publisher")[i]).removeClass("btn-success");
+                    //     $($(".publisher")[i]).removeClass("btn-primary");
+                    //     $($(".publisher")[i]).addClass("btn-warning");
+                    // }
+                    //完成状态
+                    if (postData_1[i].state === 0) {
+                        $($(".publisher")[i]).removeClass("btn-warning");
+                        $($(".publisher")[i]).removeClass("btn-info");
+                        $($(".publisher")[i]).removeClass("btn-primary");
+                        $($(".publisher")[i]).addClass("btn-success");
+                        $(".publisher")[i].innerText = "已完成";
+                    }
+                }
+            }
+        }
+
+
+        //接单按钮处理
+        function receiveOrder(info_id) {
+            $.ajax({
+                url: "../information/orderTaking",//请求路径
+                type: "POST",
+                contentType: "application/json;charset=UTF-8",
+                data: '{"infoId":' + info_id + '}',
+                dataType: "json",
+                success: function (result) {
+                    console.log(result);
+                    if (result === true) {
+                        getPageBean();
+                    } else if (user.id !== 0) {
+                        alert("不可以接该订单");
+                    } else {
+                        alert("请登录");
+                    }
+                },
+                complete: function () {
+                    encapsulation();
+                }
+            })
+        }
+
+        //如果用户未登录，点击发布悬赏时自动跳转登录
+        function jumpToLogin() {
+            if (user.username == null) {
+                $("#publishGuidance").click(function () {
+                    alert("请登录");
+                    window.location.href = "../register.html";
+                })
+            }
+        }
+
+        //两个子页面的切换
+        function switchOnClick() {
+            $("#switch").on("click", "li", function () {
+                var parent = $(this).parent();
+                var index = $(this).index();
+                for (var i = 0; i < 2; i++) {
+                    $(parent.children('li')[i]).removeClass("active");
+                }
+                $(parent.children('li')[index]).addClass("active");
+                if (index === 0) {
+                    $(".subpage_0").css("display", "block")
+                    $(".subpage_1").css("display", "none")
+                } else {
+                    $(".subpage_0").css("display", "none")
+                    $(".subpage_1").css("display", "block")
+                }
+
+                // $(this).
+            })
+        }
+    </script>
+
+    <!--Session加载函数定义-->
+    <script>
+        function getSession() {
+            $.ajax({
+                url: "../user/getSession",//请求路径
+                type: "POST",
+                contentType: "application/json;charset=UTF-8",
+                dataType: "json",
+                success: function (result) {
+                    user = result;
+                    $("#userhomeLink").attr("href", user.id);
+                    getPageBean();
+                    console.log(user);
+                    if (user.username != null) {
+                        $("#register").css("display", "none");
+                        $("#user").css("display", "");
+                        $("#user").children("a")[0].innerText = user.username;
+                    }
+
+                }
+            })
+        }
+    </script>
+
+    <!--用户下拉框-->
+    <script>
+
+        function logout() {
+            $("#register").css("display", "");
+            $("#user").css("display", "none");
+            $("#user").children("a")[0].innerText = "username";
+            $.ajax({
+                url: "../user/logout",//请求路径
+                type: "POST",
+                contentType: "application/json;charset=UTF-8",
+                dataType: "json",
+                complete: function () {
+                    getSession();
+                }
+            })
+        }
+    </script>
+
+    <!--页面唯一性-->
+    <script type="text/javascript">
+        function setUnique() {
+            var rad = Math.random();
+            var temp = Math.random();
+            var href = $("#no").attr("href");
+            $("#no").attr("href", href + '?' + rad + temp);
+        }
+    </script>
+
+    <!--函数调用-->
+    <script>
+        $(document).ready(function () {
+            setUnique();
+            getSession();
+            getOwner();
+        })
+        window.onload = function () {
+            liOnclick();
+            liOnclick_1();
+
+            switchOnClick();
+
+            $($("#dropDownCur").children('li')[1]).click(function () {
+                logout();
+            })
+
+            receiveOrder();
+
+            if (location.href.indexOf("#") == -1) {
+                setTimeout(function () {
+                    location.href = location.href + "#";
+                    location.reload();
+                }, 0.000000000001)
+            }
+        }
+    </script>
+
+    <style type="text/css">
+        .subpage_0{
+            display: block;
+        }
+
+        .subpage_1{
+            display: none;
+        }
+        body {
+            padding-top: 36px;
+        }
+
+        p {
+            font-size: 14px;
+        }
+
+        a {
+            font-size: 14px;
+        }
+
+        div {
+            font-size: 10px;
+        }
+
+        .btn {
+            font-size: 10px;
+        }
+    </style>
+
+</head>
+<body>
+<img id="no" style="display: none;" src="https://www.baidu.com/"></a>
+<!--顶部导航条-->
+<nav class="navbar navbar-default navbar-fixed-top">
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse"
+                    data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="../">帮一帮</a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <ul class="nav navbar-nav">
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
+                       aria-expanded="false" id="publishGuidance">
+                        发布您的悬赏<span class="caret"></span></a>
+                    <ul class="dropdown-menu">
+                        <li>
+                            <form action="../information/publish" id="postSumbit" method="post">
+                                <textarea name="content" style="width: 372px;height: 100px;"
+                                          placeholder="请在此处输入文本..."></textarea><br>
+                                <!--<label>悬赏额:<input type="text" name="bounty" style="width: 100px;"></label><br/>-->
+                                <label class="pull-left">赏金:<select id="bountyList" name="bounty">
+                                    <option>1</option>
+                                </select></label>
+                                <button type="submit" class="pull-right btn btn-default">提交</button>
+                            </form>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+            <ul class="nav navbar-nav navbar-right">
+                <li class="dropdown" style="display: none;" id="user">
+                    <a class="dropdown-toggle" data-toggle="dropdown" id="dropDownMenu">
+                        用户名
+                    </a>
+                    <ul class="dropdown-menu btn" id="dropDownCur">
+                        <li><a id="userhomeLink" href="">个人主页</a></li>
+                        <li><a>退出账户</a></li>
+                    </ul>
+                </li>
+                <li><a href="../register.html" role="button" id="register">登陆/注册</a></li>
+            </ul>
+        </div><!-- /.navbar-collapse -->
+    </div><!-- /.container-fluid -->
+</nav>
+
+<!--页头-->
+<div class="page-header">
+    <h1 class="col-lg-offset-3"><span id="username">USERNAME</span>&nbsp;&nbsp;<small>的主页</small>
+    </h1>
+</div>
+
+<!--按钮组-->
+<!--<div class="btn-group btn-group-justified" role="group" aria-label="...">-->
+<!--<div class="btn-group" role="group">-->
+<!--<button type="button" class="btn btn-warning active">订单信息</button>-->
+<!--</div>-->
+<!--<div class="btn-group" role="group">-->
+<!--<button type="button" class="btn btn-warning">接单信息</button>-->
+<!--</div>-->
+<!--</div>-->
+
+<!--标签页-->
+<ul id="switch" class="nav nav-tabs nav-justified">
+    <li role="presentation" class="active"><a href="#">发布的订单</a></li>
+    <li role="presentation"><a href="#">接受的订单</a></li>
+</ul>
+<!--发布正文-->
+<div class="media subpage_0">
+    <ul class="list-group" id="postList1">
+        <!--单个帖子模版-->
+        <!--<li class="list-group-item postRow_0">-->
+        <!--<div class="media">-->
+        <!--<div class="media-body">-->
+        <!--<div class="text-muted date pull-left">date</div>-->
+        <!--<br>-->
+        <!--<p class="postContent">悬赏内容</p>-->
+        <!--</div>-->
+        <!--<div class="pull-left">-->
+        <!--<button class="btn btn-default delButton" type="submit">删除</button>-->
+        <!--</div>-->
+        <!--<div class="pull-right">-->
+        <!--<button class="btn btn-primary bounty" type="submit">赏金:4元</button>-->
+        <!--<p style="display: none;" class="orderTaker">接单人:<a>orderTaker</a></p>-->
+        <!--</div>-->
+        <!--</div>-->
+        <!--</li>-->
+        <!--模版结束-->
+    </ul>
+</div>
+
+<!--接单正文-->
+<div class="media subpage_1">
+    <ul class="list-group" id="postList2">
+        <!--单个帖子模版-->
+        <!--<li class="list-group-item postRow_1">-->
+        <!--<div class="media">-->
+        <!--<div class="media-body">-->
+        <!--<div class="text-muted date_1 pull-left">date</div>-->
+        <!--<br>-->
+        <!--<p class="postContent_1">接单内容</p>-->
+        <!--</div>-->
+        <!--<div class="pull-left">-->
+        <!--<button class="btn btn-default cancelButton" type="submit">取消接单</button>-->
+        <!--</div>-->
+        <!--<div class="pull-right">-->
+        <!--<button class="btn btn-primary publisher" type="submit">发布者:</button>-->
+        <!--</div>-->
+        <!--</div>-->
+        <!--</li>-->
+        <!--模版结束-->
+    </ul>
+</div>
+<div style="height: 38px"></div>
+
+<!--第一个子页面翻页-->
+<nav aria-label="..." class="subpage_0 col-sm-offset-2 navbar-fixed-bottom">
+    <ul class="pagination" id="pagination">
+    </ul>
+</nav>
+
+<!--第二个子页面翻页-->
+<nav aria-label="..." class="subpage_1 col-sm-offset-2 navbar-fixed-bottom">
+    <ul class="pagination" id="pagination_1">
+    </ul>
+</nav>
+</body>
+</html>

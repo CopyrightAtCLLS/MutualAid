@@ -1,0 +1,17 @@
+/Users/chenlvlongshen/IdeaProjects/mutualAid/src/main/java/com/clls/service/impl/InformationServiceImpl.java
+/Users/chenlvlongshen/IdeaProjects/mutualAid/src/main/java/com/clls/domain/PageBean.java
+/Users/chenlvlongshen/IdeaProjects/mutualAid/src/main/java/com/clls/domain/User.java
+/Users/chenlvlongshen/IdeaProjects/mutualAid/src/main/java/com/clls/controller/InformationController.java
+/Users/chenlvlongshen/IdeaProjects/mutualAid/src/main/java/com/clls/dao/UserDao.java
+/Users/chenlvlongshen/IdeaProjects/mutualAid/src/main/java/com/clls/service/impl/UserServiceImpl.java
+/Users/chenlvlongshen/IdeaProjects/mutualAid/src/main/java/com/clls/exception/SysExceptionResolver.java
+/Users/chenlvlongshen/IdeaProjects/mutualAid/src/main/java/com/clls/controller/UserController.java
+/Users/chenlvlongshen/IdeaProjects/mutualAid/src/main/java/com/clls/domain/Information.java
+/Users/chenlvlongshen/IdeaProjects/mutualAid/src/main/java/com/clls/dao/InformationDao.java
+/Users/chenlvlongshen/IdeaProjects/mutualAid/src/main/java/com/clls/service/UserService.java
+/Users/chenlvlongshen/IdeaProjects/mutualAid/src/main/java/com/clls/controller/TestController.java
+/Users/chenlvlongshen/IdeaProjects/mutualAid/src/main/java/com/clls/service/InformationService.java
+/Users/chenlvlongshen/IdeaProjects/mutualAid/src/main/java/com/clls/controller/SpaceController.java
+/Users/chenlvlongshen/IdeaProjects/mutualAid/src/main/java/com/clls/utils/regex.java
+/Users/chenlvlongshen/IdeaProjects/mutualAid/src/main/java/com/clls/exception/SysException.java
+/Users/chenlvlongshen/IdeaProjects/mutualAid/src/main/java/com/clls/interceptor/SpaceInterceptor.java

@@ -1,0 +1,542 @@
+<!--<!DOCTYPE html>-->
+<!--<html lang="en">-->
+<!--<head>-->
+    <!--<meta charset="UTF-8">-->
+    <!--<meta http-equiv="X-UA-Compatible" content="IE=edge">-->
+    <!--<meta name="viewport" content="width=device-width, initial-scale=1">-->
+    <!--<title>space</title>-->
+
+    <!--&lt;!&ndash;bootstrap&ndash;&gt;-->
+    <!--<link href="css/bootstrap.min.css" rel="stylesheet">-->
+
+    <!--<script src="js/jquery-3.5.1.js"></script>-->
+    <!--<script src="js/jquery.cookie.js"></script>-->
+    <!--<script src="js/bootstrap.min.js"></script>-->
+    <!--<style type="text/css">-->
+        <!--body {-->
+            <!--padding-top: 40px;-->
+        <!--}-->
+    <!--</style>-->
+    <!--&lt;!&ndash;页面加载函数定义&ndash;&gt;-->
+    <!--<script>-->
+        <!--var currentPage = 1;-->
+        <!--var init = 0;-->
+        <!--/**-->
+         <!--* 存放服务器返回的PageBean对象-->
+         <!--*/-->
+        <!--var data;-->
+        <!--/**-->
+         <!--* 存放PageBean返回的推文list-->
+         <!--*/-->
+        <!--var postData;-->
+        <!--/**-->
+         <!--* 分页数量-->
+         <!--*/-->
+        <!--var totalPaging = 5;-->
+        <!--/**-->
+         <!--* user用户存放从服务器session中获取的User对象，表示当前用户-->
+         <!--*/-->
+        <!--var user;-->
+
+        <!--/**-->
+         <!--* 从服务器异步获取页面框架布局，以及渲染信息-->
+         <!--*/-->
+        <!--function getPageBean() {-->
+            <!--$.ajax({-->
+                <!--url: "information/userhome",//请求路径-->
+                <!--type: "POST",-->
+                <!--contentType: "application/json;charset=UTF-8",-->
+                <!--//data:$('#registerForm').serialize(),-->
+                <!--data: '{"_currentPage":' + currentPage + '}',-->
+                <!--dataType: "json",-->
+                <!--success: function (result) {-->
+                    <!--console.log(result);-->
+                    <!--data = result;-->
+                    <!--postData = result.list;-->
+                    <!--//页面布局初始化-->
+                    <!--if (init === 0) {-->
+                        <!--init = 1;-->
+                        <!--initPagination(data.totalPage);-->
+                        <!--initRows();-->
+                    <!--}-->
+                    <!--//根据pagebean设置推文的封装，以及删除键的显示-->
+                    <!--encapsulation();-->
+                    <!--setDeleteButton();-->
+                    <!--//为删除键绑定ajax-->
+                    <!--for (var i = 0; i < postData.length; i++) {-->
+                        <!--$($(".delButton")[i]).off().click(function () {-->
+                            <!--DeleteButtonOnclick($(this).attr("info-id"));-->
+                        <!--})-->
+                    <!--}-->
+                    <!--//为接单键绑定ajax-->
+                    <!--for (var i = 0; i < postData.length; i++) {-->
+                        <!--$($(".bounty")[i]).off().click(function () {-->
+                            <!--receiveOrder($(this).attr("info-id"));-->
+                        <!--})-->
+                    <!--}-->
+                    <!--setPagination();-->
+                <!--}-->
+            <!--})-->
+        <!--}-->
+
+        <!--function initPagination(totalPage) {-->
+            <!--if (totalPage > totalPaging) {-->
+                <!--$('#pagination').append("<li id=\"previous\" style=\"visibility: hidden;\"><a href=\"javascript:void(0);\" aria-label=\"Previous\"><span aria-hidden=\"true\">&laquo 上一页</span></a></li>")-->
+                <!--for (var i = 0; i < totalPaging; i++) {-->
+                    <!--if (i === 0) {-->
+                        <!--$($('#pagination').children("li")[i]).after("<li class='active'><a href=\"javascript:void(0);\">"-->
+                            <!--+ (i + 1) + "<span class=\"sr-only\"></span></a></li>");-->
+                    <!--} else {-->
+                        <!--$($('#pagination').children("li")[i]).after("<li ><a href=\"javascript:void(0);\">"-->
+                            <!--+ (i + 1) + "<span class=\"sr-only\"></span></a></li>");-->
+                    <!--}-->
+                <!--}-->
+                <!--$($('#pagination').children("li")[totalPaging]).after("<li id=\"next\" style=\"visibility: ;\"><a href=\"javascript:void(0);\" aria-label=\"Previous\"><span aria-hidden=\"true\">下一页 &raquo</span></a></li>")-->
+            <!--} else if (totalPage > 1) {-->
+                <!--$('#pagination').append("<li id=\"previous\" style=\"visibility: hidden;\"><a href=\"javascript:void(0);\" aria-label=\"Previous\"><span aria-hidden=\"true\">&laquo 上一页</span></a></li>")-->
+                <!--for (var i = 0; i < totalPage; i++) {-->
+                    <!--if (i === 0) {-->
+                        <!--$($('#pagination').children("li")[i]).after("<li class='active'><a href=\"javascript:void(0);\">"-->
+                            <!--+ (i + 1) + "<span class=\"sr-only\"></span></a></li>");-->
+                    <!--} else {-->
+                        <!--$($('#pagination').children("li")[i]).after("<li ><a href=\"javascript:void(0);\">"-->
+                            <!--+ (i + 1) + "<span class=\"sr-only\"></span></a></li>");-->
+                    <!--}-->
+                <!--}-->
+                <!--$($('#pagination').children("li")[totalPage]).after("<li id=\"next\" style=\"visibility: ;\"><a href=\"javascript:void(0);\" aria-label=\"Previous\"><span aria-hidden=\"true\">下一页 &raquo</span></a></li>")-->
+            <!--}-->
+        <!--}-->
+
+        <!--function initRows() {-->
+            <!--for (var i = 0; i < postData.length; i++)-->
+                <!--$("#postList").append("<li class=\"list-group-item postRow\">\n" +-->
+                    <!--"            <div class=\"media\">\n" +-->
+                    <!--"                <div class=\"media-body\">\n" +-->
+                    <!--"                    <div class=\"text-muted date pull-left\">date</div>\n" +-->
+                    <!--"                    <br>\n" +-->
+                    <!--"                    <p class=\"postContent\">悬赏内容</p>\n" +-->
+                    <!--"                </div>\n" +-->
+                    <!--"                <div class=\"pull-left\">\n" +-->
+                    <!--"                    <button class=\"btn btn-default delButton\" type=\"submit\">删除</button>\n" +-->
+                    <!--"                </div>\n" +-->
+                    <!--"                <div class=\"pull-right\">\n" +-->
+                    <!--"                    <button class=\"btn btn-primary bounty\" type=\"submit\">赏金:4元</button>\n" +-->
+                    <!--// "                    <p style=\"display: none;\" class=\"orderTaker\">接单人:<a>orderTaker</a></p>\n" +-->
+                    <!--"                </div>\n" +-->
+                    <!--"            </div>\n" +-->
+                    <!--"        </li>")-->
+        <!--}-->
+
+        <!--/**-->
+         <!--* 设置currentPage,以及前进后退的隐藏和显示-->
+         <!--*/-->
+        <!--function liOnclick() {-->
+            <!--$("#pagination").on("click", "li", function () {-->
+                <!--var index = $(this).index();-->
+                <!--//设置当前页码-->
+                <!--//向前按钮-->
+                <!--if (index === 0) {-->
+                    <!--currentPage -= 1;-->
+                <!--}-->
+                <!--//普通按钮-->
+                <!--else if (index !== $("#pagination").children().length - 1) {-->
+                    <!--if (currentPage < (totalPaging + 1) / 2) {-->
+                        <!--currentPage = index;-->
+                    <!--} else if (currentPage >= (totalPaging + 1) / 2 && currentPage < data.totalPage - (totalPaging - 3) / 2) {-->
+                        <!--currentPage += (index - (totalPaging + 1) / 2);-->
+                    <!--} else {-->
+                        <!--currentPage = data.totalPage - ($("#pagination").children().length - 2 - index);-->
+                    <!--}-->
+                <!--}-->
+                <!--//向后按钮-->
+                <!--else {-->
+                    <!--currentPage += 1;-->
+                <!--}-->
+                <!--//设置前进后退的隐藏和显示-->
+                <!--if (currentPage > 1) {-->
+                    <!--$("#previous").css("visibility", "");-->
+                <!--} else {-->
+                    <!--$("#previous").css("visibility", "hidden");-->
+                <!--}-->
+                <!--if (currentPage < data.totalPage) {-->
+                    <!--$("#next").css("visibility", "");-->
+                <!--} else {-->
+                    <!--$("#next").css("visibility", "hidden");-->
+                <!--}-->
+                <!--if (currentPage < $("#pagination").children().length - 1) {-->
+                    <!--$("#pagination").children().removeClass("active");-->
+                    <!--$($("#pagination").children("li")[currentPage]).addClass('active');-->
+                <!--}-->
+                <!--getPageBean();-->
+            <!--})-->
+        <!--}-->
+
+        <!--/**-->
+         <!--* 根据当前用户设置前端按钮的显示。该方法必须在PageBean正确返回后再执行-->
+         <!--*/-->
+        <!--function setDeleteButton() {-->
+            <!--//设置接单和删除按钮的显示隐藏，以及info ID-->
+            <!--for (var i = 0; i < postData.length; i++) {-->
+                <!--$($(".delButton")[i]).css("display", "none");-->
+                <!--$($(".delButton")[i]).attr("info-id", postData[i].id);-->
+
+                <!--$($(".bounty")[i]).attr("info-id", postData[i].id);-->
+                <!--if (user.id === postData[i].userId) {-->
+                    <!--$($(".delButton")[i]).css("display", "");-->
+                <!--}-->
+            <!--}-->
+        <!--}-->
+
+        <!--function DeleteButtonOnclick(info_id) {-->
+            <!--if (confirm("您确定要删除？") == true) {-->
+                <!--$.ajax({-->
+                    <!--url: "information/deleteOrder",//请求路径-->
+                    <!--type: "POST",-->
+                    <!--contentType: "application/json;charset=UTF-8",-->
+                    <!--data: '{"infoId":' + info_id + '}',-->
+                    <!--dataType: "json",-->
+                    <!--success: function () {-->
+                        <!--getPageBean();-->
+                    <!--}-->
+                <!--})-->
+            <!--}-->
+        <!--}-->
+
+        <!--function encapsulation() {-->
+            <!--//页面数据初始化-->
+            <!--$(".postRow").css("display", "none");-->
+            <!--for (var i = 0; i < postData.length; i++) {-->
+                <!--//指向日期-->
+                <!--$(".date")[i].innerText = "date";-->
+                <!--//指向内容-->
+                <!--$(".postContent")[i].innerText = "content";-->
+                <!--//指向赏金-->
+                <!--$(".bounty")[i].innerText = "赏金";-->
+            <!--}-->
+            <!--//封装数据-->
+            <!--for (var i = 0; i < postData.length; i++) {-->
+                <!--$($(".postRow")[i]).css("display", "")-->
+                <!--var content = postData[i].content;-->
+                <!--var date = postData[i].date;-->
+                <!--var bounty = postData[i].bounty;-->
+                <!--//封装单个帖子的数据-->
+                <!--//指向日期-->
+                <!--$(".date")[i].innerText = date;-->
+                <!--//指向内容-->
+                <!--$(".postContent")[i].innerText = content;-->
+                <!--//指向赏金-->
+                <!--$(".bounty")[i].innerText = "赏金:" + bounty + "元";-->
+                <!--//设置接单按钮状态-->
+                <!--$($(".bounty")[i]).css("display", "");-->
+                <!--// $($(".orderTaker")[i]).css("display", "none");-->
+                <!--//待领取状态-->
+                <!--if (postData[i].state === 1) {-->
+                    <!--$($(".bounty")[i]).removeClass("btn-warning");-->
+                    <!--$($(".bounty")[i]).removeClass("btn-success");-->
+                    <!--$($(".bounty")[i]).addClass("btn-primary");-->
+                <!--}-->
+                <!--//进行中状态-->
+                <!--else if (postData[i].state === 2) {-->
+                    <!--$($(".bounty")[i]).removeClass("btn-primary");-->
+                    <!--$($(".bounty")[i]).addClass("btn-info");-->
+                    <!--$(".bounty")[i].innerText = "接单人:" + postData[i].servant.username;-->
+                    <!--// $($(".bounty")[i]).css("display", "none");-->
+                    <!--// $($(".orderTaker")[i]).css("display", "");-->
+                    <!--// $($(".orderTaker")[i]).children("a")[0].innerText="接单人";-->
+                <!--}-->
+                <!--//完成状态-->
+                <!--else {-->
+                    <!--$($(".bounty")[i]).removeClass("btn-primary");-->
+                    <!--$($(".bounty")[i]).addClass("btn-success");-->
+                    <!--$(".bounty")[i].innerText = "已完成";-->
+                <!--}-->
+            <!--}-->
+            <!--$("#username")[0].innerText = postData[0].user.username + ":";-->
+        <!--}-->
+
+        <!--/**-->
+         <!--* 根据currentPage设置分页按钮的激活特效，和页码显示-->
+         <!--*/-->
+        <!--function setPagination() {-->
+            <!--//当总页数大于分页数-->
+            <!--if (data.totalPage > totalPaging) {-->
+                <!--if (currentPage >= (totalPaging + 1) / 2 && currentPage < data.totalPage - (totalPaging - 3) / 2) {-->
+                    <!--// console.log("中间")-->
+                    <!--for (var i = 1; i < totalPaging + 1; i++) {-->
+                        <!--$($("#pagination").children("li")[i]).children('a')[0].innerText-->
+                            <!--= currentPage - ((totalPaging + 1) / 2 - i);-->
+                    <!--}-->
+                    <!--$("#pagination").children().removeClass("active");-->
+                    <!--$($("#pagination").children("li")[(totalPaging + 1) / 2]).addClass('active');-->
+                <!--} else if (currentPage >= data.totalPage - (totalPaging - 3) / 2) {-->
+                    <!--// console.log("右边")-->
+                    <!--if (currentPage > data.totalPage) {-->
+                        <!--currentPage = data.totalPage;-->
+                        <!--getPageBean();-->
+                    <!--}-->
+                    <!--for (var i = 1; i < totalPaging + 1; i++) {-->
+                        <!--$($("#pagination").children("li")[totalPaging + 1 - i]).children('a')[0].innerText-->
+                            <!--= data.totalPage - i + 1;-->
+                    <!--}-->
+                    <!--$("#pagination").children().removeClass("active");-->
+                    <!--$($("#pagination").children("li")[$("#pagination").children().length - 2 - (data.totalPage - currentPage)]).addClass('active');-->
+                <!--} else {-->
+                    <!--for (var i = 1; i < totalPaging + 1; i++) {-->
+                        <!--// console.log("左边")-->
+                        <!--$($("#pagination").children("li")[i]).children('a')[0].innerText-->
+                            <!--= i;-->
+                    <!--}-->
+                <!--}-->
+            <!--}-->
+            <!--//当总页数小于等于分页数-->
+            <!--else {-->
+                <!--if (data.totalPage === totalPaging) {-->
+                    <!--if (currentPage === data.totalPage + 1) {-->
+                        <!--currentPage -= 1;-->
+                        <!--getPageBean();-->
+                    <!--}-->
+                    <!--for (var i = 1; i <= data.totalPage; i++) {-->
+                        <!--$($("#pagination").children("li")[i]).children('a')[0].innerText-->
+                            <!--= i;-->
+                    <!--}-->
+                <!--}-->
+                <!--if (data.totalPage < totalPaging) {-->
+                    <!--if (currentPage === data.totalPage + 1) {-->
+                        <!--currentPage -= 1;-->
+                        <!--getPageBean();-->
+                    <!--}-->
+                    <!--$("#pagination").empty();-->
+                    <!--$('#pagination').append("<li id=\"previous\" style=\"visibility: ;\"><a href=\"javascript:void(0);\" aria-label=\"Previous\"><span aria-hidden=\"true\">&laquo 上一页</span></a></li>")-->
+                    <!--for (var i = 0; i < data.totalPage; i++) {-->
+                        <!--$($('#pagination').children("li")[i]).after("<li ><a href=\"javascript:void(0);\">"-->
+                            <!--+ (i + 1) + "<span class=\"sr-only\"></span></a></li>");-->
+                    <!--}-->
+                    <!--$($('#pagination').children("li")[data.totalPage]).after("<li id=\"next\" style=\"visibility: ;\"><a href=\"javascript:void(0);\" aria-label=\"Previous\"><span aria-hidden=\"true\">下一页 &raquo</span></a></li>")-->
+                    <!--if (currentPage === 1)-->
+                        <!--$("#previous").css("visibility", "hidden");-->
+                    <!--if (currentPage === 0) {-->
+                        <!--$("#previous").css("visibility", "hidden");-->
+                    <!--}-->
+                <!--}-->
+                <!--if (currentPage !== 0) {-->
+                    <!--$("#pagination").children().removeClass("active");-->
+                    <!--$($("#pagination").children("li")[currentPage]).addClass('active');-->
+                <!--}-->
+            <!--}-->
+            <!--if (currentPage === data.totalPage) {-->
+                <!--$("#next").css("visibility", "hidden");-->
+            <!--} else {-->
+                <!--$("#next").css("visibility", "");-->
+            <!--}-->
+        <!--}-->
+
+        <!--/**-->
+         <!--* 接单按钮处理-->
+         <!--*/-->
+        <!--function receiveOrder(info_id) {-->
+            <!--$.ajax({-->
+                <!--url: "information/orderTaking",//请求路径-->
+                <!--type: "POST",-->
+                <!--contentType: "application/json;charset=UTF-8",-->
+                <!--data: '{"infoId":' + info_id + '}',-->
+                <!--dataType: "json",-->
+                <!--success: function (result) {-->
+                    <!--console.log(result);-->
+                    <!--if (result === true) {-->
+                        <!--getPageBean();-->
+                    <!--} else if (user.id !== 0) {-->
+                        <!--alert("不可以接该订单");-->
+                    <!--} else {-->
+                        <!--alert("请登录");-->
+                    <!--}-->
+
+                <!--}-->
+            <!--})-->
+        <!--}-->
+
+        <!--/**-->
+         <!--* 如果用户未登录，点击发布悬赏时自动跳转登录-->
+         <!--*/-->
+        <!--function pageRoute() {-->
+
+        <!--}-->
+    <!--</script>-->
+
+    <!--&lt;!&ndash;Session加载函数定义&ndash;&gt;-->
+    <!--<script>-->
+        <!--function getSession() {-->
+            <!--$.ajax({-->
+                <!--url: "user/getSession",//请求路径-->
+                <!--type: "POST",-->
+                <!--contentType: "application/json;charset=UTF-8",-->
+                <!--dataType: "json",-->
+                <!--success: function (result) {-->
+                    <!--user = result;-->
+                    <!--getPageBean();-->
+                    <!--console.log(user);-->
+                    <!--if (user.username != null) {-->
+                        <!--$("#register").css("display", "none");-->
+                        <!--$("#user").css("display", "");-->
+                        <!--$("#user").children("a")[0].innerText = user.username;-->
+                    <!--}-->
+
+                <!--}-->
+            <!--})-->
+        <!--}-->
+    <!--</script>-->
+
+    <!--&lt;!&ndash;用户下拉框&ndash;&gt;-->
+    <!--<script>-->
+
+        <!--function logout() {-->
+            <!--$("#register").css("display", "");-->
+            <!--$("#user").css("display", "none");-->
+            <!--$("#user").children("a")[0].innerText = "username";-->
+            <!--$.ajax({-->
+                <!--url: "user/logout",//请求路径-->
+                <!--type: "POST",-->
+                <!--contentType: "application/json;charset=UTF-8",-->
+                <!--dataType: "json",-->
+                <!--complete: function () {-->
+                    <!--getSession();-->
+                <!--}-->
+            <!--})-->
+        <!--}-->
+    <!--</script>-->
+
+    <!--&lt;!&ndash;函数调用&ndash;&gt;-->
+    <!--<script>-->
+        <!--$(document).ready(function () {-->
+            <!--$($("#dropDownCur").children('li')[1]).click(function () {-->
+                <!--logout();-->
+            <!--})-->
+        <!--})-->
+        <!--window.onload = function () {-->
+            <!--getSession();-->
+            <!--liOnclick();-->
+        <!--}-->
+    <!--</script>-->
+    <!--<style type="text/css">-->
+        <!--body {-->
+            <!--padding-top: 36px;-->
+        <!--}-->
+
+        <!--p {-->
+            <!--font-size: 14px;-->
+        <!--}-->
+
+        <!--a {-->
+            <!--font-size: 14px;-->
+        <!--}-->
+
+        <!--div {-->
+            <!--font-size: 10px;-->
+        <!--}-->
+
+        <!--.btn {-->
+            <!--font-size: 10px;-->
+        <!--}-->
+    <!--</style>-->
+<!--</head>-->
+<!--<body>-->
+<!--&lt;!&ndash;顶部导航条&ndash;&gt;-->
+<!--<nav class="navbar navbar-default navbar-fixed-top">-->
+    <!--<div class="container-fluid">-->
+        <!--&lt;!&ndash; Brand and toggle get grouped for better mobile display &ndash;&gt;-->
+        <!--<div class="navbar-header">-->
+            <!--<button type="button" class="navbar-toggle collapsed" data-toggle="collapse"-->
+                    <!--data-target="#bs-example-navbar-collapse-1" aria-expanded="false">-->
+                <!--<span class="sr-only">Toggle navigation</span>-->
+                <!--<span class="icon-bar"></span>-->
+                <!--<span class="icon-bar"></span>-->
+                <!--<span class="icon-bar"></span>-->
+            <!--</button>-->
+            <!--<a class="navbar-brand" href="index.html">帮一帮</a>-->
+        <!--</div>-->
+
+        <!--&lt;!&ndash; Collect the nav links, forms, and other content for toggling &ndash;&gt;-->
+        <!--<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">-->
+            <!--<ul class="nav navbar-nav">-->
+                <!--<li class="dropdown">-->
+                    <!--<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"-->
+                       <!--aria-expanded="false" id="publishGuidance">-->
+                        <!--发布您的悬赏<span class="caret"></span></a>-->
+                    <!--<ul class="dropdown-menu">-->
+                        <!--<li>-->
+                            <!--<form action="information/publish" id="postSumbit" method="post">-->
+                                <!--<textarea name="content" style="width: 372px;height: 100px;"-->
+                                          <!--placeholder="请在此处输入文本..."></textarea><br>-->
+                                <!--&lt;!&ndash;<label>悬赏额:<input type="text" name="bounty" style="width: 100px;"></label><br/>&ndash;&gt;-->
+                                <!--<label class="pull-left">赏金:<select id="bountyList" name="bounty">-->
+                                    <!--<option>1</option>-->
+                                <!--</select></label>-->
+                                <!--<button type="submit" class="pull-right btn btn-default">提交</button>-->
+                            <!--</form>-->
+                        <!--</li>-->
+                    <!--</ul>-->
+                <!--</li>-->
+            <!--</ul>-->
+            <!--<ul class="nav navbar-nav navbar-right">-->
+                <!--<li class="dropdown" style="display: none;" id="user">-->
+                    <!--<a class="dropdown-toggle" data-toggle="dropdown" id="dropDownMenu">-->
+                        <!--用户名-->
+                    <!--</a>-->
+                    <!--<ul class="dropdown-menu btn" id="dropDownCur">-->
+                        <!--<li><a>个人主页</a></li>-->
+                        <!--<li><a>退出账户</a></li>-->
+                    <!--</ul>-->
+                <!--</li>-->
+                <!--<li><a href="register.html" role="button" id="register">登陆/注册</a></li>-->
+            <!--</ul>-->
+        <!--</div>&lt;!&ndash; /.navbar-collapse &ndash;&gt;-->
+    <!--</div>&lt;!&ndash; /.container-fluid &ndash;&gt;-->
+<!--</nav>-->
+<!--&lt;!&ndash;页头&ndash;&gt;-->
+<!--<div class="page-header">-->
+    <!--<h1 class="col-lg-offset-3"><span id="username">USERNAME</span>&nbsp;&nbsp;<small>的主页</small>-->
+    <!--</h1>-->
+<!--</div>-->
+<!--&lt;!&ndash;按钮组&ndash;&gt;-->
+<!--<div class="btn-group btn-group-justified" role="group" aria-label="...">-->
+    <!--<div class="btn-group" role="group">-->
+        <!--<button type="button" class="btn btn-warning active">订单信息</button>-->
+    <!--</div>-->
+    <!--<div class="btn-group" role="group">-->
+        <!--<button type="button" class="btn btn-warning">接单信息</button>-->
+    <!--</div>-->
+<!--</div>-->
+<!--&lt;!&ndash;正文&ndash;&gt;-->
+<!--<div class="media">-->
+    <!--<ul class="list-group" id="postList">-->
+        <!--&lt;!&ndash;单个帖子模版&ndash;&gt;-->
+        <!--&lt;!&ndash;<li class="list-group-item postRow">&ndash;&gt;-->
+        <!--&lt;!&ndash;<div class="media">&ndash;&gt;-->
+        <!--&lt;!&ndash;<div class="media-body">&ndash;&gt;-->
+        <!--&lt;!&ndash;<div class="text-muted date pull-left">date</div>&ndash;&gt;-->
+        <!--&lt;!&ndash;<br>&ndash;&gt;-->
+        <!--&lt;!&ndash;<p class="postContent">悬赏内容</p>&ndash;&gt;-->
+        <!--&lt;!&ndash;</div>&ndash;&gt;-->
+        <!--&lt;!&ndash;<div class="pull-left">&ndash;&gt;-->
+        <!--&lt;!&ndash;<button class="btn btn-default delButton" type="submit">删除</button>&ndash;&gt;-->
+        <!--&lt;!&ndash;</div>&ndash;&gt;-->
+        <!--&lt;!&ndash;<div class="pull-right">&ndash;&gt;-->
+        <!--&lt;!&ndash;<button class="btn btn-primary bounty" class="bounty" type="submit">赏金:4元</button>&ndash;&gt;-->
+        <!--&lt;!&ndash;<p style="display: none;" class="orderTaker">接单人:<a>orderTaker</a></p>&ndash;&gt;-->
+        <!--&lt;!&ndash;</div>&ndash;&gt;-->
+        <!--&lt;!&ndash;</div>&ndash;&gt;-->
+        <!--&lt;!&ndash;</li>&ndash;&gt;-->
+        <!--&lt;!&ndash;模版结束&ndash;&gt;-->
+    <!--</ul>-->
+<!--</div>-->
+<!--<div style="height: 38px"></div>-->
+<!--&lt;!&ndash;翻页&ndash;&gt;-->
+<!--<nav aria-label="..." class=" col-sm-offset-2 navbar-fixed-bottom">-->
+    <!--<ul class="pagination" id="pagination">-->
+        <!--&lt;!&ndash;<li id="previous" style="visibility: hidden;"><a href="javascript:void(0);" aria-label="Previous"><span aria-hidden="true">&laquo</span></a>&ndash;&gt;-->
+        <!--&lt;!&ndash;</li>&ndash;&gt;-->
+        <!--&lt;!&ndash;<li id="next"><a href="javascript:void(0);" aria-label="Next"><span aria-hidden="true">&raquo;</span></a>&ndash;&gt;-->
+        <!--&lt;!&ndash;</li>&ndash;&gt;-->
+    <!--</ul>-->
+<!--</nav>-->
+<!--</body>-->
+<!--</html>-->

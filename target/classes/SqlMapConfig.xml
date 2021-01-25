@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE configuration
+        PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+    <settings>
+        <setting name="lazyLoadingEnabled" value="true"/>
+        <setting name="aggressiveLazyLoading" value="false"/>
+    </settings>
+    <!--配置环境-->
+    <environments default="mysql">
+        <!--配置mysql环境-->
+        <environment id="mysql">
+            <!--配置事务-->
+            <transactionManager type="JDBC"></transactionManager>
+            <!--配置连接池-->
+            <dataSource type="POOLED">
+                <property name="driver" value="com.mysql.cj.jdbc.Driver"></property>
+                <property name="url" value="jdbc:mysql://localhost:3306/MutualAid?&amp;useSSL=false&amp;serverTimezone=UTC"></property>
+                <property name="username" value="root"></property>
+                <property name="password" value="clls2000"></property>
+            </dataSource>
+        </environment>
+    </environments>
+    <!--配置映射文件位置-->
+    <mappers>
+        <!--<mapper resource="com/clls/dao/UserDao.xml"></mapper>-->
+        <package name="com.clls.dao"></package>
+    </mappers>
+</configuration>
