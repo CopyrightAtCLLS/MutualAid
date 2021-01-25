@@ -7,7 +7,15 @@
     </artifacts-to-build>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="6ffaac80-ef25-4c8e-aef5-46c7df3d0fd4" name="Default Changelist" comment="" />
+    <list default="true" id="6ffaac80-ef25-4c8e-aef5-46c7df3d0fd4" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/compiler.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/encodings.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/uiDesigner.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" />
+    </list>
     <ignored path="$PROJECT_DIR$/out/" />
     <ignored path="$PROJECT_DIR$/target/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -35,23 +43,6 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/java/com/clls/controller/InformationController.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="850">
-              <caret line="192" column="44" selection-start-line="192" selection-start-column="44" selection-end-line="192" selection-end-column="44" />
-              <folding>
-                <element signature="method#homepage#0;class#InformationController#0" />
-                <element signature="method#userhome#0;class#InformationController#0" />
-                <element signature="method#orderTaking#0;class#InformationController#0" />
-                <element signature="method#deleteOrder#0;class#InformationController#0" />
-                <element signature="method#cancelOrder#0;class#InformationController#0" />
-                <element signature="method#completeOrder#0;class#InformationController#0" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/java/com/clls/service/InformationService.java">
           <provider selected="true" editor-type-id="text-editor">
@@ -86,13 +77,18 @@
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
         <entry file="jar:///Library/Java/JavaVirtualMachines/jdk1.8.0_172.jdk/Contents/Home/src.zip!/java/util/ArrayList.java">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="322">
               <caret line="1467" column="1" selection-start-line="1467" selection-start-column="1" selection-end-line="1467" selection-end-column="1" />
             </state>
           </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/.gitignore">
+          <provider selected="true" editor-type-id="text-editor" />
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
@@ -222,7 +218,6 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/src/main/webapp/html/test.jsp" />
         <option value="$PROJECT_DIR$/src/main/webapp/WEB-INF/pages/success.html" />
         <option value="$PROJECT_DIR$/src/main/webapp/WEB-INF/pages/failure.html" />
         <option value="$PROJECT_DIR$/src/main/java/com/clls/SysException.java" />
@@ -273,6 +268,7 @@
         <option value="$PROJECT_DIR$/src/main/java/com/clls/controller/InformationController.java" />
         <option value="$PROJECT_DIR$/src/test/java/TestInformationDao.java" />
         <option value="$PROJECT_DIR$/src/test/java/Test.java" />
+        <option value="$PROJECT_DIR$/.gitignore" />
       </list>
     </option>
   </component>
@@ -343,7 +339,7 @@
     <property name="DefaultHtmlFileTemplate" value="HTML File" />
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="aspect.path.notification.shown" value="true" />
-    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1611210779504" />
+    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1611566318265" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$" />
     <property name="list.type.of.created.stylesheet" value="CSS" />
     <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
@@ -782,7 +778,7 @@
       <workItem from="1611210449166" duration="343000" />
       <workItem from="1611233439528" duration="981000" />
       <workItem from="1611238203412" duration="26000" />
-      <workItem from="1611565415642" duration="258000" />
+      <workItem from="1611565415642" duration="838000" />
     </task>
     <servers />
   </component>
@@ -819,7 +815,7 @@
     </history-entry>
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="562177000" />
+    <option name="totallyTimeSpent" value="562757000" />
   </component>
   <component name="TodoView" selected-index="2">
     <todo-panel id="selected-file">
@@ -833,7 +829,7 @@
   <component name="ToolWindowManager">
     <frame x="0" y="25" width="1440" height="821" extended-state="0" />
     <layout>
-      <window_info content_ui="combo" id="Project" order="0" sideWeight="0.49315068" visible="true" weight="0.2639485" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" sideWeight="0.49315068" visible="true" weight="0.2639485" />
       <window_info id="Structure" order="1" sideWeight="0.50410956" side_tool="true" weight="0.28612304" />
       <window_info id="Designer" order="2" />
       <window_info id="Image Layers" order="3" />
@@ -850,7 +846,7 @@
       <window_info anchor="bottom" id="TODO" order="6" weight="0.32739726" />
       <window_info anchor="bottom" id="Thumbnails" order="7" weight="0.32872927" />
       <window_info anchor="bottom" id="Spring" order="8" weight="0.32739726" />
-      <window_info active="true" anchor="bottom" id="Terminal" order="9" visible="true" weight="0.3250346" />
+      <window_info anchor="bottom" id="Terminal" order="9" visible="true" weight="0.3250346" />
       <window_info anchor="bottom" id="Docker" order="10" show_stripe_button="false" />
       <window_info anchor="bottom" id="Event Log" order="11" sideWeight="0.50214595" side_tool="true" weight="0.41917807" />
       <window_info anchor="bottom" id="Messages" order="12" weight="0.32365146" />
@@ -913,151 +909,6 @@
     <option name="FILTER_TARGETS" value="false" />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/src/main/webapp/index.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="867">
-          <caret line="250" column="9" selection-start-line="250" selection-start-column="9" selection-end-line="250" selection-end-column="9" />
-          <folding>
-            <element signature="e#538#583#0" />
-            <element signature="e#610#656#0" />
-            <element signature="e#687#718#0" />
-            <element signature="e#756#819#0" />
-            <element signature="e#847#895#0" />
-            <element signature="e#927#2439#0" />
-            <element signature="e#948#2428#0" />
-            <element signature="e#1288#2414#0" />
-            <element signature="e#1476#1625#0" />
-            <element signature="e#1846#2042#0" />
-            <element signature="e#1918#2019#0" />
-            <element signature="e#2138#2324#0" />
-            <element signature="e#2207#2301#0" />
-            <element signature="e#2484#4560#0" />
-            <element signature="e#2527#3528#0" />
-            <element signature="e#2786#3291#0" />
-            <element signature="e#2821#3051#0" />
-            <element signature="e#3057#3273#0" />
-            <element signature="e#3553#4550#0" />
-            <element signature="e#3810#4315#0" />
-            <element signature="e#3845#4075#0" />
-            <element signature="e#4081#4297#0" />
-            <element signature="e#4590#6014#0" />
-            <element signature="e#6024#6077#0" />
-            <element signature="e#6107#7789#0" />
-            <element signature="e#6168#7778#0" />
-            <element signature="e#6231#6239#0" />
-            <element signature="e#6296#6353#0" />
-            <element signature="e#6452#6934#0" />
-            <element signature="e#6515#6583#0" />
-            <element signature="e#6687#6782#0" />
-            <element signature="e#6788#6916#0" />
-            <element signature="e#6979#7036#0" />
-            <element signature="e#7105#7182#0" />
-            <element signature="e#7188#7271#0" />
-            <element signature="e#7322#7395#0" />
-            <element signature="e#7401#7480#0" />
-            <element signature="e#7555#7733#0" />
-            <element signature="e#7799#7864#0" />
-            <element signature="e#8251#8332#0" />
-            <element signature="e#8404#8876#0" />
-            <element signature="e#8450#8866#0" />
-            <element signature="e#8475#8851#0" />
-            <element signature="e#8771#8833#0" />
-            <element signature="e#8911#10968#0" />
-            <element signature="e#9039#9343#0" />
-            <element signature="e#9417#10958#0" />
-            <element signature="e#9693#9704#0" />
-            <element signature="e#10047#10057#0" />
-            <element signature="e#10127#10344#0" />
-            <element signature="e#10419#10627#0" />
-            <element signature="e#10672#10944#0" />
-            <element signature="e#10978#11035#0" />
-            <element signature="e#11069#14947#0" />
-            <element signature="e#11141#12788#0" />
-            <element signature="e#11257#11734#0" />
-            <element signature="e#11362#11547#0" />
-            <element signature="e#11799#12496#0" />
-            <element signature="e#11896#12012#0" />
-            <element signature="e#12075#12259#0" />
-            <element signature="e#12502#12774#0" />
-            <element signature="e#12566#12756#0" />
-            <element signature="e#12832#14746#0" />
-            <element signature="e#12886#13278#0" />
-            <element signature="e#12948#13052#0" />
-            <element signature="e#13115#13260#0" />
-            <element signature="e#13329#14514#0" />
-            <element signature="e#13391#13495#0" />
-            <element signature="e#13804#14020#0" />
-            <element signature="e#14405#14496#0" />
-            <element signature="e#14554#14732#0" />
-            <element signature="e#14795#14866#0" />
-            <element signature="e#14872#14937#0" />
-            <element signature="e#14957#14990#0" />
-            <element signature="e#15030#15676#0" />
-            <element signature="e#15051#15665#0" />
-            <element signature="e#15329#15651#0" />
-            <element signature="e#15413#15475#0" />
-            <element signature="e#15500#15565#0" />
-            <element signature="e#15571#15632#0" />
-            <element signature="e#15686#15721#0" />
-            <element signature="e#15755#15929#0" />
-            <element signature="e#15798#15919#0" />
-            <element signature="e#15939#15987#0" />
-            <element signature="e#16019#16256#0" />
-            <element signature="e#16060#16246#0" />
-            <element signature="e#16118#16231#0" />
-            <element signature="n#script#4;n#head#0;n#html#0;n#!!top" />
-            <element signature="e#16340#17067#0" />
-            <element signature="e#16361#17056#0" />
-            <element signature="e#16579#17042#0" />
-            <element signature="e#16803#17023#0" />
-            <element signature="n#script#5;n#head#0;n#html#0;n#!!top" />
-            <element signature="e#17149#17490#0" />
-            <element signature="e#17217#17282#0" />
-            <element signature="e#17346#17402#0" />
-            <element signature="e#17416#17478#0" />
-            <element signature="e#17518#17984#0" />
-            <element signature="e#17697#17973#0" />
-            <element signature="e#17906#17959#0" />
-            <element signature="n#script#6;n#head#0;n#html#0;n#!!top" />
-            <element signature="e#18067#18216#0" />
-            <element signature="e#18164#18205#0" />
-            <element signature="e#18254#18354#0" />
-            <element signature="n#style#0;n#head#0;n#html#0;n#!!top" />
-            <element signature="e#18410#18452#0" />
-            <element signature="e#18464#18504#0" />
-            <element signature="e#18516#18556#0" />
-            <element signature="e#18570#18610#0" />
-            <element signature="e#18625#18665#0" />
-            <element signature="n#body#0;n#html#0;n#!!top" />
-            <element signature="n#nav#0;n#body#0;n#html#0;n#!!top" />
-            <element signature="n#div#0;n#nav#0;n#body#0;n#html#0;n#!!top" />
-            <element signature="n#div#0;n#div#0;n#nav#0;n#body#0;n#html#0;n#!!top" />
-            <element signature="n#button#0;n#div#0;n#div#0;n#nav#0;n#body#0;n#html#0;n#!!top" />
-            <element signature="n#div#1;n#div#0;n#nav#0;n#body#0;n#html#0;n#!!top" />
-            <element signature="n#ul#0;n#div#1;n#div#0;n#nav#0;n#body#0;n#html#0;n#!!top" />
-            <element signature="n#li#0;n#ul#0;n#div#1;n#div#0;n#nav#0;n#body#0;n#html#0;n#!!top" />
-            <element signature="n#a#0;n#li#0;n#ul#0;n#div#1;n#div#0;n#nav#0;n#body#0;n#html#0;n#!!top" />
-            <element signature="n#ul#0;n#li#0;n#ul#0;n#div#1;n#div#0;n#nav#0;n#body#0;n#html#0;n#!!top" />
-            <element signature="n#li#0;n#ul#0;n#li#0;n#ul#0;n#div#1;n#div#0;n#nav#0;n#body#0;n#html#0;n#!!top" />
-            <element signature="n#form#0;n#li#0;n#ul#0;n#li#0;n#ul#0;n#div#1;n#div#0;n#nav#0;n#body#0;n#html#0;n#!!top" />
-            <element signature="n#textarea#0;n#form#0;n#li#0;n#ul#0;n#li#0;n#ul#0;n#div#1;n#div#0;n#nav#0;n#body#0;n#html#0;n#!!top" />
-            <element signature="n#label#0;n#form#0;n#li#0;n#ul#0;n#li#0;n#ul#0;n#div#1;n#div#0;n#nav#0;n#body#0;n#html#0;n#!!top" />
-            <element signature="n#select#0;n#label#0;n#form#0;n#li#0;n#ul#0;n#li#0;n#ul#0;n#div#1;n#div#0;n#nav#0;n#body#0;n#html#0;n#!!top" />
-            <element signature="n#ul#1;n#div#1;n#div#0;n#nav#0;n#body#0;n#html#0;n#!!top" />
-            <element signature="n#li#0;n#ul#1;n#div#1;n#div#0;n#nav#0;n#body#0;n#html#0;n#!!top" />
-            <element signature="n#a#0;n#li#0;n#ul#1;n#div#1;n#div#0;n#nav#0;n#body#0;n#html#0;n#!!top" />
-            <element signature="n#ul#0;n#li#0;n#ul#1;n#div#1;n#div#0;n#nav#0;n#body#0;n#html#0;n#!!top" />
-            <element signature="n#div#0;n#body#0;n#html#0;n#!!top" />
-            <element signature="n#ul#0;n#div#0;n#body#0;n#html#0;n#!!top" />
-            <element signature="n#nav#1;n#body#0;n#html#0;n#!!top" />
-            <element signature="n#ul#0;n#nav#1;n#body#0;n#html#0;n#!!top" />
-            <marker date="1604019997241" expanded="false" signature="966:1244" ph="..." />
-            <marker date="1604019997241" expanded="false" signature="981:1244" ph="..." />
-            <marker date="1604019997241" expanded="false" signature="22550:22570" ph="..." />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="jar://$MAVEN_REPOSITORY$/org/mybatis/mybatis/3.4.5/mybatis-3.4.5.jar!/org/apache/ibatis/session/SqlSession.class">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="102">
@@ -1506,6 +1357,9 @@
           <caret line="1467" column="1" selection-start-line="1467" selection-start-column="1" selection-end-line="1467" selection-end-column="1" />
         </state>
       </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/.gitignore">
+      <provider selected="true" editor-type-id="text-editor" />
     </entry>
   </component>
   <component name="masterDetails">
